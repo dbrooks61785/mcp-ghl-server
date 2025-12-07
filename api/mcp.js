@@ -1,7 +1,8 @@
-cat > api/mcp.js << 'EOF'
 export default async function handler(req, res) {
+  const url = req.url;
+
   // MANIFEST ENDPOINT
-  if (req.url.endsWith("/manifest") && req.method === "GET") {
+  if (url.endsWith("/manifest") && req.method === "GET") {
     const manifest = {
       type: "list_tools",
       tools: [
@@ -19,29 +20,22 @@ export default async function handler(req, res) {
     return;
   }
 
-  // TOOL EXECUTION ENDPOINT
-  if (req.url.endsWith("/mcp") && req.method === "POST") {
-    let body = "";
+  // TOOL EXECUTION ENDPOINT (POST ONLY)
+  if (url.endsWith("/mcp") && req.method === "POST") {
+    const response = {
+      tool: "ping",
+      result: "pong"
+    };
 
-    req.on("data", chunk => {
-      body += chunk;
-    });
-
-    req.on("end", () => {
-      const response = {
-        tool: "ping",
-        result: "pong"
-      };
-
-      res.setHeader("Content-Type", "application/json");
-      res.status(200).send(JSON.stringify(response));
-    });
-
+    res.setHeader("Content-Type", "application/json");
+    res.status(200).send(JSON.stringify(response));
     return;
   }
 
-  // DEFAULT
+  // PREVENT 500 ERRORS FOR INVALID METHODS
   res.setHeader("Content-Type", "application/json");
-  res.status(200).send(JSON.stringify({ status: "MCP server active" }));
+  res.status(200).send(JSON.stringify({
+    status: "MCP server active",
+    detail: "Send POST to /mcp or GET /mcp/manifest"
+  }));
 }
-EOF
