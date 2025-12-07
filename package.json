@@ -1,0 +1,7 @@
+cat > package.json << 'EOF'
+{
+  "name": "mcp-ghl-server",
+  "version": "1.0.0",
+  "type": "module"
+}
+EOF

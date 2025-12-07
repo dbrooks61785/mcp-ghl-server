@@ -1,0 +1,15 @@
+cat > vercel.json << 'EOF'
+{
+  "version": 3,
+  "routes": [
+    {
+      "src": "/mcp",
+      "dest": "api/mcp.js"
+    },
+    {
+      "src": "/mcp/manifest",
+      "dest": "api/mcp.js"
+    }
+  ]
+}
+EOF
